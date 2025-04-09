@@ -1,5 +1,5 @@
-<div>
-    <h2 class="text-2xl font-semibold mb-4">Gestión de Usuarios (Clásico)</h2>
+<div class="container mx-auto p-4">
+    <h2 class="text-2xl text-white  font-semibold mb-4">Gestión de Usuarios </h2>
 
     {{-- Mensaje de éxito/error --}}
     @if (session()->has('message'))
@@ -20,24 +20,20 @@
     @endif
 
     <div class="flex justify-between items-center mb-4">
-        {{-- Botón para abrir modal/formulario --}}
         <button wire:click="create()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Crear Nuevo Usuario
         </button>
 
-        {{-- Campo de búsqueda --}}
          <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por nombre, apellido o email..." class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-1/3">
     </div>
 
 
-    {{-- Modal/Formulario (se muestra si la propiedad pública $isOpen es true) --}}
     @if($isOpen)
     <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" wire:click="closeModal()"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                {{-- El formulario llama al método 'store' de la clase PHP al enviarse --}}
                 <form wire:submit.prevent="store">
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <div class="sm:flex sm:items-start">
@@ -91,9 +87,8 @@
             </div>
         </div>
     </div>
-    @endif {{-- Fin del @if($isOpen) --}}
+    @endif 
 
-    {{-- Tabla de Usuarios --}}
     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg mt-6">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -106,7 +101,6 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                {{-- La variable $users viene del método render() de la clase PHP --}}
                 @forelse ($users as $user)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $user->name }}</td>
@@ -115,7 +109,6 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $user->nro_telefono ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button wire:click="edit({{ $user->id }})" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</button>
-                            {{-- Nota: wire:confirm no existe en Livewire v2 clásico, necesitarías JS o un modal de confirmación si usas v2. Asumiendo v3: --}}
                             <button wire:click="delete({{ $user->id }})" wire:confirm="¿Estás seguro de eliminar a {{ $user->name }}?" class="text-red-600 hover:text-red-900">Eliminar</button>
                         </td>
                     </tr>
@@ -134,9 +127,7 @@
         </table>
     </div>
 
-    {{-- Paginación --}}
      <div class="mt-4">
-         {{ $users->links() }} {{-- Llama a links() sobre la variable $users pasada desde render() --}}
      </div>
 
 </div>
