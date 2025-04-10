@@ -141,4 +141,20 @@ class UserManagement extends Component
         $this->reset(['name', 'apellido', 'email', 'nro_telefono', 'password', 'password_confirmation', 'userId']);
         $this->resetErrorBag();
     }
+    public function toggleActivation($userId)
+{
+    if (auth()->id() == $userId) {
+        session()->flash('error', 'No puedes desactivar tu propia cuenta.');
+        return;
+    }
+
+    $user = User::find($userId);
+    if ($user) {
+        $user->is_active = !$user->is_active; 
+        $user->save();
+        $status = $user->is_active ? 'activado' : 'desactivado';
+        session()->flash('message', "Usuario {$status} correctamente.");
+    }
+}
+
 }
