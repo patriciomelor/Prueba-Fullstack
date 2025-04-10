@@ -28,16 +28,27 @@ class LoginForm extends Form
      */
     public function authenticate(): void
     {
-        $this->ensureIsNotRateLimited();
+        $this->ensureIsNotRateLimited(); // Comprueba rate limiting
 
+        // Intenta autenticar usando los datos del formulario
         if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
-
+            RateLimiter::hit($this->throttleKey()); // Incrementa contador de intentos fallidos
+    
             throw ValidationException::withMessages([
-                'form.email' => trans('auth.failed'),
+                'form.email' => trans('auth.failed'), // Usa 'form.email' como en tu código original
             ]);
         }
+        $user = Auth::user();
 
+        // Verificamos si el usuario existe (por si acaso) y si NO está activo
+        if (!$user || !$user->is_active) {
+            $isActive = $user?->is_active; // Guarda el estado antes de hacer logout (por si user es null)
+            Auth::guard('web')->logout(); // Lo deslogueamos porque no está activo
+    
+            throw ValidationException::withMessages([
+               'form.email' => $isActive === false ? trans('auth.inactive') : trans('auth.failed'),
+            ]);
+        }
         RateLimiter::clear($this->throttleKey());
     }
 

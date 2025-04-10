@@ -97,6 +97,7 @@
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apellido</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th> {{-- NUEVA CABECERA --}}
                     <th scope="col" class="relative px-6 py-3"><span class="sr-only">Acciones</span></th>
                 </tr>
             </thead>
@@ -107,8 +108,23 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $user->apellido }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $user->email }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $user->nro_telefono ?? '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            @if($user->is_active)
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Activo
+                                </span>
+                            @else
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    Inactivo
+                                </span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button wire:click="edit({{ $user->id }})" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</button>
+                            <button wire:click="toggleActivation({{ $user->id }})"
+                                class="{{ $user->is_active ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900' }} mr-3">
+                            {{ $user->is_active ? 'Desactivar' : 'Activar' }}
+                        </button>
                             <button wire:click="delete({{ $user->id }})" wire:confirm="¿Estás seguro de eliminar a {{ $user->name }}?" class="text-red-600 hover:text-red-900">Eliminar</button>
                         </td>
                     </tr>
